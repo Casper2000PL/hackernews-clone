@@ -4,6 +4,9 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import ReactDOM from "react-dom/client";
 
 import { routeTree } from "./routeTree.gen";
+import { Loader2Icon } from "lucide-react";
+import NotFound from "./components/not-found";
+import ErrorComponent from "./components/error-component";
 
 const queryClient = new QueryClient({});
 // Set up a Router instance
@@ -14,6 +17,14 @@ const router = createRouter({
   context: {
     queryClient,
   },
+  defaultPendingComponent: () => (
+    <div className="mx-auto mt-8 flex flex-col items-center justify-center">
+      <Loader2Icon className="animate-spin" />
+      <p className="text-muted-foreground mt-2 text-sm">Loading...</p>
+    </div>
+  ),
+  defaultNotFoundComponent: NotFound,
+  defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,
 });
 
 // Register things for type safety

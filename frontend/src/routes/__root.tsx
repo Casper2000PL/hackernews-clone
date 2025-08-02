@@ -1,5 +1,6 @@
+import Header from "@/components/side-header";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 export const Route = createRootRoute({
@@ -9,27 +10,18 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <div className="flex gap-2 p-2 text-lg">
-        <Link
-          to="/"
-          activeProps={{
-            className: "font-bold",
-          }}
-          activeOptions={{ exact: true }}
-        >
-          Home
-        </Link>{" "}
-        <Link
-          to="/about"
-          activeProps={{
-            className: "font-bold",
-          }}
-        >
-          About
-        </Link>
+      <div className="text-foreground bg-custom-white flex min-h-screen flex-col">
+        <Header />
+        <main className="container mx-auto grow p-4">
+          <Outlet />
+        </main>
+        <footer className="container mx-auto p-4 text-center">
+          <p className="text-muted-foreground text-sm">
+            HackerNews &copy; 2025
+          </p>
+        </footer>
       </div>
-      <hr />
-      <Outlet />
+
       <TanStackRouterDevtools position="bottom-left" />
       <ReactQueryDevtools />
     </>
