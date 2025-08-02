@@ -10,6 +10,9 @@
   "dependencies": {
     "@hono/zod-validator": "^0.7.2",
     "@lucia-auth/adapter-drizzle": "^1.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "@typescript-eslint/utils": "^8.38.0",
     "drizzle-orm": "^0.44.4",
     "drizzle-zod": "^0.8.2",
     "hono": "^4.8.9",
