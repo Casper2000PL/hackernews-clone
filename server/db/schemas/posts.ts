@@ -15,17 +15,25 @@ export const postsTable = pgTable("posts", {
   url: text("url"),
   content: text("content"),
   points: integer("points").default(0).notNull(), // up/downvotes like in reddit
-  commentCount: integer("comment_count"),
+  commentCount: integer("comment_count").default(0).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
 });
 
+const URL_REGEX =
+  /^https?:\/\/(?:[-\w.])+(?::[0-9]+)?(?:\/(?:[\w/_.])*)?(?:\?(?:[\w&=%.])*)?(?:#(?:[\w.])*)?$/;
+
 export const insertPostSchema = createInsertSchema(postsTable, {
   title: z
     .string()
     .min(3, { message: "Title must be at least 3 characters long" }),
-  url: z.url({ message: "Invalid URL" }).optional().or(z.literal("")),
+  url: z
+    .string()
+    .trim()
+    .regex(URL_REGEX, { message: "URL must be a valid URL" })
+    .optional()
+    .or(z.literal("")),
   content: z.string().optional(),
 });
 
