@@ -21,8 +21,7 @@ export const postsTable = pgTable("posts", {
     .notNull(),
 });
 
-const URL_REGEX =
-  /^https?:\/\/(?:[-\w.])+(?::[0-9]+)?(?:\/(?:[\w/_.])*)?(?:\?(?:[\w&=%.])*)?(?:#(?:[\w.])*)?$/;
+const URL_REGEX = /^https?:\/\/(?:[\w\-._~:/?#[\]@!$&'()*+,;=%])+$/;
 
 export const insertPostSchema = createInsertSchema(postsTable, {
   title: z

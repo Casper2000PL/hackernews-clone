@@ -64,13 +64,10 @@ export const postRouter = new Hono<Context>()
   .get("/", zValidator("query", paginationSchema), async (c) => {
     const { limit, page, sortBy, order, author, site } = c.req.valid("query");
     const user = c.get("user");
-
     const offset = (page - 1) * limit;
-
     const sortByColumn =
       sortBy === "points" ? postsTable.points : postsTable.createdAt;
     const sortOrder = order === "desc" ? desc(sortByColumn) : asc(sortByColumn);
-
     const [count] = await db
       .select({ count: countDistinct(postsTable.id) })
       .from(postsTable)
@@ -80,17 +77,16 @@ export const postRouter = new Hono<Context>()
           site ? eq(postsTable.url, site) : undefined,
         ),
       );
-
     if (!count) {
       throw new HTTPException(500, { message: "Failed to count posts" });
     }
-
     const postsQuery = db
       .select({
         id: postsTable.id,
         title: postsTable.title,
         content: postsTable.content,
         url: postsTable.url,
+        points: postsTable.points, // Added this missing field
         createdAt: getISOFormatDateQuery(postsTable.createdAt),
         commentCount: postsTable.commentCount,
         author: {
@@ -112,7 +108,6 @@ export const postRouter = new Hono<Context>()
           site ? eq(postsTable.url, site) : undefined,
         ),
       );
-
     if (user) {
       postsQuery.leftJoin(
         postUpvotesTable,
@@ -122,9 +117,7 @@ export const postRouter = new Hono<Context>()
         ),
       );
     }
-
     const posts = await postsQuery;
-
     return c.json<PaginatedResponse<Post[]>>(
       {
         data: posts as Post[],
@@ -375,9 +368,7 @@ export const postRouter = new Hono<Context>()
   )
   .get(
     "/:id",
-
     zValidator("param", z.object({ id: z.coerce.number() })),
-
     async (c) => {
       const user = c.get("user");
       const { id } = c.req.valid("param");
