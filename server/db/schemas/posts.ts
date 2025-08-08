@@ -24,13 +24,11 @@ export const postsTable = pgTable("posts", {
 const URL_REGEX = /^https?:\/\/(?:[\w\-._~:/?#[\]@!$&'()*+,;=%])+$/;
 
 export const insertPostSchema = createInsertSchema(postsTable, {
-  title: z
-    .string()
-    .min(3, { message: "Title must be at least 3 characters long" }),
+  title: z.string().min(3, { message: "Title must be at least 3 chars" }),
   url: z
     .string()
     .trim()
-    .regex(URL_REGEX, { message: "URL must be a valid URL" })
+    .url({ message: "URL must be a valid URL" })
     .optional()
     .or(z.literal("")),
   content: z.string().optional(),
